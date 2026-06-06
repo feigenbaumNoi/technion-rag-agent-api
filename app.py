@@ -81,47 +81,46 @@ def generate_rag_response(
     return final_output
     
 
-if __name__ == '__main__':
-    # Initialize the Flask web application
-    app = Flask(__name__)
-    TOP_K = 17  
+# Initialize the Flask web application
+app = Flask(__name__)
+TOP_K = 17  
 
-    # ENDPOINT 1: /api/prompt - Receives the user question and returns the RAG response using a POST request
-    @app.route('/api/prompt', methods=['POST'])
-    def handle_prompt():
-        incoming_data = request.get_json()
-        user_question = incoming_data.get("question", "")
+# ENDPOINT 1: /api/prompt - Receives the user question and returns the RAG response using a POST request
+@app.route('/api/prompt', methods=['POST'])
+def handle_prompt():
+    incoming_data = request.get_json()
+    user_question = incoming_data.get("question", "")
 
-        llmod_key = os.environ.get("LLMOD_API_KEY") 
-        pinecone_key = os.environ.get("PINECONE_API_KEY")
-        pinecone_index_name = "individual-rag-task-index-final"
-        
-        embeddings_model = initialize_embeddings(llmod_api_key=llmod_key)
-        retrieved_results = retrieve_relevant_chunks(
-            query=user_question,
-            embeddings=embeddings_model,
-            pinecone_api_key=pinecone_key,
-            index_name=pinecone_index_name,
-            top_k=TOP_K
-        )
-        final_response_dict = generate_rag_response(
-            query=user_question,
-            retrieved_results=retrieved_results,
-            llmod_api_key=llmod_key
-        )
-        return jsonify(final_response_dict)
+    llmod_key = os.environ.get("LLMOD_API_KEY") 
+    pinecone_key = os.environ.get("PINECONE_API_KEY")
+    pinecone_index_name = "individual-rag-task-index-final"
     
-    # ENDPOINT 2: /api/stats - Returns the hyperparameters configuration using a GET request
-    @app.route('/api/stats', methods=['GET'])
-    def get_stats():
-        stats_dict = {
-            "chunk_size": 700,
-            "overlap_ratio": 0.285, 
-            "top_k": TOP_K
-        }
-        return jsonify(stats_dict)
-    
-    app.run(port=5000, debug=True)
+    embeddings_model = initialize_embeddings(llmod_api_key=llmod_key)
+    retrieved_results = retrieve_relevant_chunks(
+        query=user_question,
+        embeddings=embeddings_model,
+        pinecone_api_key=pinecone_key,
+        index_name=pinecone_index_name,
+        top_k=TOP_K
+    )
+    final_response_dict = generate_rag_response(
+        query=user_question,
+        retrieved_results=retrieved_results,
+        llmod_api_key=llmod_key
+    )
+    return jsonify(final_response_dict)
+
+# ENDPOINT 2: /api/stats - Returns the hyperparameters configuration using a GET request
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    stats_dict = {
+        "chunk_size": 700,
+        "overlap_ratio": 0.285, 
+        "top_k": TOP_K
+    }
+    return jsonify(stats_dict)
+
+app.run(port=5000, debug=True)
 
 
 
