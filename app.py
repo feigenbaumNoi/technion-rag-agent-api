@@ -1,12 +1,9 @@
-import pandas as pd
-from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter as RecCharTxtSpltr
 import os
-from langchain_openai import OpenAIEmbeddings
-from langchain_pinecone import PineconeVectorStore
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
 from flask import Flask, request, jsonify
+from langchain_core.documents import Document
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_pinecone import PineconeVectorStore
 
 
 def initialize_embeddings(llmod_api_key: str) -> OpenAIEmbeddings:

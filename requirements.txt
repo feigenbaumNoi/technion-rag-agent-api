@@ -1,6 +1,4 @@
 Flask
-pandas
 langchain-core
-langchain-text-splitters
 langchain-openai
 langchain-pinecone
