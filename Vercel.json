@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "ai_agents_individual_hw.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "ai_agents_individual_hw.py"
+    }
+  ]
+}
